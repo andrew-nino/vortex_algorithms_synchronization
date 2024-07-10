@@ -13,12 +13,20 @@ type Authorization interface {
 	ParseToken(token string) (int, error)
 }
 
+type Client interface {
+	AddClient(client entity.Client) (int, error)
+	UpdateClient(client entity.Client) (int, error)
+	DeleteClient(id int) error
+}
+
 type Service struct {
 	Authorization
+	Client
 }
 
 func NewService(reposPG *postgres.PG_Repository, cfg *config.Config) *Service {
 	return &Service{
 		Authorization: NewAuthService(reposPG.Authorization, cfg),
+		Client:        NewClientService(reposPG.ClientPostgres),
 	}
 }

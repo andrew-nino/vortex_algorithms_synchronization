@@ -65,7 +65,7 @@ func (s *AuthService) SignIn(managerName, password string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Duration(s.config.JWT.TokenTTL)).Unix(),
+			ExpiresAt: time.Now().Add(time.Duration(s.config.JWT.TokenTTL) * time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		managerId,

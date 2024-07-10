@@ -23,5 +23,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.signIn)
 	}
 
+	v1 := router.Group("/api/v1", h.userIdentity)
+
+	client := v1.Group("/client")
+	{
+		client.POST("/", h.addClient)
+		client.PUT("/update", h.updateClient)
+		client.DELETE("/delete", h.deleteClient)
+	}
+
+	status := v1.Group("status")
+	{
+		status.PUT("/update", h.updateStatus)
+	}
+
 	return router
 }

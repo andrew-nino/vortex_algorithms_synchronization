@@ -11,12 +11,20 @@ type Authorization interface {
 	GetManager(username, password string) (int, error)
 }
 
+type ClientPostgres interface {
+	AddClient(client entity.Client) (int, error)
+	UpdateClient(client entity.Client) (int, error)
+	DeleteClient(id int) error
+}
+
 type PG_Repository struct {
 	Authorization
+	ClientPostgres
 }
 
 func NewPGRepository(db *sqlx.DB) *PG_Repository {
 	return &PG_Repository{
-		Authorization: NewAuthPostgres(db),
+		Authorization:  NewAuthPostgres(db),
+		ClientPostgres: NewClientPostgres(db),
 	}
 }
