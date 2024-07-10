@@ -1,0 +1,2 @@
+# vortex_algorithms_synchronization
+Тестовое задание
