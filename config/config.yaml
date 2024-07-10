@@ -11,7 +11,12 @@ postgres:
   password: "qwerty"
 
 http:
-  port: 8080
+  port: 8000
 
 log:
   level: "debug"
+
+jwt:
+  salt: "klwnrkmw;rlg[e'tk[]]"
+  signing_key: "okojmtnknjehvdcutsychv;l/dgth"
+  token_ttl: 12

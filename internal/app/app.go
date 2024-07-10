@@ -1,8 +1,16 @@
 package app
 
 import (
-	"vtx_algorithms_synchronization/config"
-	"vtx_algorithms_synchronization/pkg/postgres"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/andrew-nino/vtx_algorithms_synchronization/config"
+	handler "github.com/andrew-nino/vtx_algorithms_synchronization/internal/controller/http/v1"
+	repoPG "github.com/andrew-nino/vtx_algorithms_synchronization/internal/repository/postgresdb"
+	service "github.com/andrew-nino/vtx_algorithms_synchronization/internal/service"
+	httpserver "github.com/andrew-nino/vtx_algorithms_synchronization/pkg/httpserver"
+	"github.com/andrew-nino/vtx_algorithms_synchronization/pkg/postgres"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -32,6 +40,28 @@ func Run(configPath string) {
 	m := NewMigration(cfg)
 	err = m.Steps(1)
 	if err != nil {
-		log.Fatalf("failed to migrate db: %s", err.Error())
+		log.Errorf("failed to migrate db: %s", err.Error())
 	}
+
+	// Services dependencies
+	log.Info("Initializing services...")
+	repos := repoPG.NewPGRepository(db)
+	service := service.NewService(repos, cfg)
+	handlers := handler.NewHandler(service)
+
+	// HTTP server
+	log.Info("Starting http server...")
+	srv := new(httpserver.Server)
+
+	go func() {
+		if err := srv.Run(cfg.HTTP.Port, handlers.InitRoutes()); err != nil {
+			log.Fatalf("error occured while running http server: %s", err.Error())
+		}
+	}()
+
+	log.Print(cfg.App.Name + " Started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
 }

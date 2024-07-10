@@ -1,8 +1,8 @@
 package app
 
 import (
+	"github.com/andrew-nino/vtx_algorithms_synchronization/config"
 	"log"
-	"vtx_algorithms_synchronization/config"
 
 	go_migrate "github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"

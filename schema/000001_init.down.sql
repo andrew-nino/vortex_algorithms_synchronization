@@ -1,1 +1,2 @@
-DROP TABLE IF EXISTS AlgorithmStatus;
+DROP TABLE IF EXISTS managers;
+DROP TABLE IF EXISTS algorithm_status;

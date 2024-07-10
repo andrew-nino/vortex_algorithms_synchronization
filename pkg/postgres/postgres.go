@@ -2,9 +2,9 @@ package postgres
 
 import (
 	"fmt"
+	"github.com/andrew-nino/vtx_algorithms_synchronization/config"
 	"log"
 	"time"
-	"vtx_algorithms_synchronization/config"
 
 	"github.com/jmoiron/sqlx"
 )

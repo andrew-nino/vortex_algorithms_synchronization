@@ -9,10 +9,11 @@ import (
 
 type (
 	Config struct {
-		App   `yaml:"app"`
-		HTTP  `yaml:"http"`
-		Log   `yaml:"log"`
-		PG    `yaml:"postgres"`
+		App  `yaml:"app"`
+		HTTP `yaml:"http"`
+		Log  `yaml:"log"`
+		PG   `yaml:"postgres"`
+		JWT  `yaml:"jwt"`
 	}
 
 	App struct {
@@ -35,6 +36,12 @@ type (
 		Password string `env-required:"true" yaml:"password" env:"POSTGRES_PASSWORD"`
 		DBName   string
 		SSLMode  string
+	}
+
+	JWT struct {
+		Salt       string `env-required:"true" yaml:"salt"`
+		SigningKey string `env-required:"true" yaml:"signing_key"`
+		TokenTTL   int    `env-required:"true" yaml:"token_ttl"`
 	}
 )
 

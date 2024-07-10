@@ -8,7 +8,7 @@ import (
 func SetLogrus(level string) {
 
 	logrusLevel, err := logrus.ParseLevel(level)
-	
+
 	if err != nil {
 		logrus.SetLevel(logrus.DebugLevel)
 	} else {
