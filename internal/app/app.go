@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -59,9 +60,20 @@ func Run(configPath string) {
 		}
 	}()
 
-	log.Print(cfg.App.Name + " Started")
+	log.Print("App " + cfg.App.Name + " version: " + cfg.App.Version + " Started")
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
+
+	log.Print(cfg.App.Name + " Shutting Down")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		log.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		log.Errorf("error occured on db connection close: %s", err.Error())
+	}
+
 }
