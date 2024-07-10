@@ -6,7 +6,6 @@ import (
 
 	"github.com/andrew-nino/vtx_algorithms_synchronization/entity"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 type response struct {
@@ -24,8 +23,7 @@ func (h *Handler) addClient(c *gin.Context) {
 
 	clientID, err := h.services.AddClient(newClient)
 	if err != nil {
-		log.Debugf("error when creating task  : %s", err.Error())
-		newErrorResponse(c, http.StatusInternalServerError, "client creation failed")
+		newErrorResponse(c, http.StatusInternalServerError, "client add failed")
 		return
 	}
 	c.JSON(http.StatusOK, response{Message: "success", ID: clientID})
@@ -41,8 +39,7 @@ func (h *Handler) updateClient(c *gin.Context) {
 
 	clientID, err := h.services.UpdateClient(updateClient)
 	if err != nil {
-		log.Debugf("error when update client  : %s", err.Error())
-		newErrorResponse(c, http.StatusInternalServerError, "client creation failed")
+		newErrorResponse(c, http.StatusInternalServerError, "client update failed")
 		return
 	}
 	c.JSON(http.StatusOK, response{Message: "success", ID: clientID})
@@ -56,13 +53,16 @@ func (h *Handler) deleteClient(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "client_id is required")
 		return
 	}
-
 	clientID, err := strconv.Atoi(paramStr)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "client_id must be an integer")
 		return
 	}
 	err = h.services.DeleteClient(clientID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, "client delete failed")
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"Message": "success"})
 

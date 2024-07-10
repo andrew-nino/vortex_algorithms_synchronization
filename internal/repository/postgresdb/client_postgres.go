@@ -14,21 +14,34 @@ type ClientToPostgres struct {
 	db *sqlx.DB
 }
 
-func NewClientPostgres(db *sqlx.DB) *ClientToPostgres {
+func NewClientToPostgres(db *sqlx.DB) *ClientToPostgres {
 	return &ClientToPostgres{db: db}
 }
 
 func (c *ClientToPostgres) AddClient(add entity.Client) (int, error) {
-	var id int
-	query := fmt.Sprintf(`INSERT INTO %s (client_id, client_name, version, image, cpu, memory, priority, needRestart, spawned_at) 
-									values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, clientTable)
-	row := c.db.QueryRow(query, add.ID, add.ClientName, add.Version, add.Image, add.CPU, add.Memory, add.Priority, add.NeedRestart, add.SpawnedAt)
-	err := row.Scan(&id)
+	tx, err := c.db.Begin()
 	if err != nil {
-		log.Debugf("repository.AddClient - row.Scan : %v", err)
 		return 0, err
 	}
-	return id, nil
+	var clientID int
+	queryToClient := fmt.Sprintf(`INSERT INTO %s (client_id, client_name, version, image, cpu, memory, priority, needRestart, spawned_at) 
+									values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, clientTable)
+	rowClient := tx.QueryRow(queryToClient, add.ID, add.ClientName, add.Version, add.Image, add.CPU, add.Memory, add.Priority, add.NeedRestart, add.SpawnedAt)
+	err = rowClient.Scan(&clientID)
+	if err != nil {
+		log.Debugf("repository.AddClient - rowClient.Scan : %v", err)
+		tx.Rollback()
+		return 0, err
+	}
+	queryToStatus := fmt.Sprintf(`INSERT INTO %s (client_id) values ($1) RETURNING id`, statusTable)
+	_, err = tx.Exec(queryToStatus, add.ID)
+	if err != nil {
+		tx.Rollback()
+		log.Debugf("repository.AddClient - tx.Exec : %v", err)
+		return 0, err
+	}
+
+	return clientID, tx.Commit()
 }
 
 func (c *ClientToPostgres) UpdateClient(client entity.Client) (int, error) {
@@ -79,11 +92,12 @@ func (c *ClientToPostgres) UpdateClient(client entity.Client) (int, error) {
 }
 
 func (c *ClientToPostgres) DeleteClient(clientId int) error {
-
-	query := fmt.Sprintf(`DELETE FROM %s WHERE client_id = $1 `, clientTable)
-	_, err := c.db.Exec(query, clientId)
+	var checkID int
+	query := fmt.Sprintf(`DELETE FROM %s WHERE client_id = $1 RETURNING id`, clientTable)
+	row := c.db.QueryRow(query, clientId)
+	err := row.Scan(&checkID)
 	if err != nil {
-		log.Debugf("repository.DeleteClient - db.Exec : %v", err)
+		log.Debugf("repository.DeleteClient - row.Scan : %v", err)
 		return err
 	}
 	return nil

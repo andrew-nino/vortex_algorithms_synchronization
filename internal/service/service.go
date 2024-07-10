@@ -19,14 +19,20 @@ type Client interface {
 	DeleteClient(id int) error
 }
 
+type AlgorithmStatus interface {
+	UpdateStatus(status entity.AlgorithmStatus) error
+}
+
 type Service struct {
 	Authorization
 	Client
+	AlgorithmStatus
 }
 
 func NewService(reposPG *postgres.PG_Repository, cfg *config.Config) *Service {
 	return &Service{
-		Authorization: NewAuthService(reposPG.Authorization, cfg),
-		Client:        NewClientService(reposPG.ClientPostgres),
+		Authorization:   NewAuthService(reposPG.Authorization, cfg),
+		Client:          NewClientService(reposPG.ClientPostgres),
+		AlgorithmStatus: NewAlgorithmStatusService(reposPG.AlgorithmStatusPostgres),
 	}
 }

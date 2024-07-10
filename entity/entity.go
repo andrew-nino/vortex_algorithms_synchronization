@@ -22,3 +22,10 @@ type Client struct {
 	CreatedAt   time.Time `db:"created_at" json:"-"`
 	UpdatedAt   time.Time `db:"update_at" json:"-"`
 }
+
+type AlgorithmStatus struct {
+	ClientID int64 `db:"client_id" json:"client_id" binding:"required"`
+	VWAP     bool  `db:"vwap" json:"vwap"`
+	TWAP     bool  `db:"twap" json:"twap"`
+	HFT      bool  `db:"hft" json:"hft"`
+}

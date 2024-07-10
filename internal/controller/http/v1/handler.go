@@ -32,7 +32,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		client.DELETE("/delete", h.deleteClient)
 	}
 
-	status := v1.Group("status")
+	status := v1.Group("/status")
 	{
 		status.PUT("/update", h.updateStatus)
 	}

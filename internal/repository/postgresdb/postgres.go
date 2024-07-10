@@ -17,14 +17,20 @@ type ClientPostgres interface {
 	DeleteClient(id int) error
 }
 
+type AlgorithmStatusPostgres interface {
+	UpdateStatus(status entity.AlgorithmStatus) error
+}
+
 type PG_Repository struct {
 	Authorization
 	ClientPostgres
+	AlgorithmStatusPostgres
 }
 
 func NewPGRepository(db *sqlx.DB) *PG_Repository {
 	return &PG_Repository{
-		Authorization:  NewAuthPostgres(db),
-		ClientPostgres: NewClientPostgres(db),
+		Authorization:           NewAuthPostgres(db),
+		ClientPostgres:          NewClientToPostgres(db),
+		AlgorithmStatusPostgres: NewAlgorithmStatusToPostgres(db),
 	}
 }

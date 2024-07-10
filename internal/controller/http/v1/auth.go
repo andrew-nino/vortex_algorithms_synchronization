@@ -24,9 +24,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
-	})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
 type signInInput struct {
@@ -49,7 +47,5 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"token": token,
-	})
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
