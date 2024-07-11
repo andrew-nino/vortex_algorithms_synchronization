@@ -18,7 +18,7 @@ func (h *Handler) addClient(c *gin.Context) {
 	newClient := entity.Client{}
 
 	if err := c.BindJSON(&newClient); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
@@ -27,7 +27,7 @@ func (h *Handler) addClient(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, "client add failed")
 		return
 	}
-	c.JSON(http.StatusOK, response{Message: "success", ID: clientID})
+	c.JSON(http.StatusOK, response{Message:"success",ID: clientID})
 }
 
 // Update client data. If successful, we get the client id
@@ -35,7 +35,7 @@ func (h *Handler) updateClient(c *gin.Context) {
 	updateClient := entity.Client{}
 
 	if err := c.BindJSON(&updateClient); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h *Handler) updateClient(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, "client update failed")
 		return
 	}
-	c.JSON(http.StatusOK, response{Message: "success", ID: clientID})
+	c.JSON(http.StatusOK, response{Message:"success",ID: clientID})
 
 }
 
@@ -67,6 +67,6 @@ func (h *Handler) deleteClient(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Message": "success"})
+	c.JSON(http.StatusOK, gin.H{"message":"success"})
 
 }

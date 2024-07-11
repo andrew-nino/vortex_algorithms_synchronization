@@ -11,14 +11,14 @@ type Manager struct {
 
 type Client struct {
 	ID          int64     `db:"client_id" json:"client_id" binding:"required"`
-	ClientName  string    `db:"client_name" json:"client_name"`
-	Version     int       `db:"version" json:"version"`
-	Image       string    `db:"image" json:"image"`
-	CPU         string    `db:"cpu" json:"cpu"`
-	Memory      string    `db:"memory" json:"memory"`
-	Priority    float64   `db:"priority" json:"priority"`
-	NeedRestart bool      `db:"needRestart" json:"needRestart"`
-	SpawnedAt   string    `db:"spawned_at" json:"spawned_at"`
+	ClientName  string    `db:"client_name" json:"client_name" binding:"required"`
+	Version     int       `db:"version" json:"version" binding:"required"`
+	Image       string    `db:"image" json:"image" binding:"required"`
+	CPU         string    `db:"cpu" json:"cpu" binding:"required"`
+	Memory      string    `db:"memory" json:"memory" binding:"required"`
+	Priority    float64   `db:"priority" json:"priority" binding:"required"`
+	NeedRestart bool      `db:"need_restart" json:"need_restart" binding:"required"`
+	SpawnedAt   string    `db:"spawned_at" json:"spawned_at" binding:"required"`
 	CreatedAt   time.Time `db:"created_at" json:"-"`
 	UpdatedAt   time.Time `db:"update_at" json:"-"`
 }
