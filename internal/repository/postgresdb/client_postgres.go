@@ -77,6 +77,9 @@ func (c *ClientToPostgres) UpdateClient(client entity.Client) (int, error) {
 	if client.NeedRestart {
 		setValues = append(setValues, fmt.Sprintf("needRestart='%v'", client.NeedRestart))
 	}
+
+	setValues = append(setValues, "update_at=now()")
+
 	setQuery := strings.Join(setValues, ", ")
 
 	query := fmt.Sprintf(`UPDATE %s SET %s  WHERE client_id = $1 RETURNING id`, clientTable, setQuery)

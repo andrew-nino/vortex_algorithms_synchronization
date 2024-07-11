@@ -70,8 +70,7 @@ func Run(configPath string) {
 		for {
 			log.Print("Algorithm status check started")
 			service.CheckAlgorithmStatus(deployManager)
-			// time.Sleep(5 * time.Minute)
-			time.Sleep(1 * time.Minute)
+			time.Sleep(5 * time.Minute)
 		}
 	}()
 
