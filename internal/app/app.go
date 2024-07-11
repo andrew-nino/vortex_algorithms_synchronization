@@ -66,10 +66,10 @@ func Run(configPath string) {
 
 	go func() {
 		// Deployer initializations
-		deploy := deployment.NewDeploy()
+		deployManager := deployment.NewDeploy()
 		for {
 			log.Print("Algorithm status check started")
-			service.CheckAlgorithmStatus(deploy)
+			service.CheckAlgorithmStatus(deployManager)
 			// time.Sleep(5 * time.Minute)
 			time.Sleep(1 * time.Minute)
 		}

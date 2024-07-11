@@ -31,8 +31,6 @@ func (s *AlgorithmStatusService) CheckAlgorithmStatus(deploy *deployment.Deploy)
 
 	for _, client := range statusClients {
 
-		log.Infof("Algorithm status for client  %v  VWAP = %v  TWAP = %v  HFT = %v", client.ClientID, client.VWAP, client.TWAP, client.HFT)
-
 		if client.VWAP {
 			CheckAndStartDeployment(client.ClientID, "VWAP", mapStatuses, deploy)
 		} else {

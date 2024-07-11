@@ -21,7 +21,7 @@ func (dm *DeployManager) CreatePod(clientID int64, algorithmStr string) error {
 	newPod := NewPod(clientID, algorithm)
 
 	dm.Pods = append(dm.Pods, newPod)
-	log.Printf("A pod for the algorithm %s for the client %d has been created\n", algorithm.Name, newPod.ClientID)
+	log.Printf("A pod for the algorithm %s for the client %d has been created", algorithm.Name, newPod.ClientID)
 	return nil
 }
 
@@ -30,7 +30,7 @@ func (dm *DeployManager) DeletePod(clientID int64, algorithmStr string) error {
 	for i, pod := range dm.Pods {
 		if pod.ClientID == clientID && pod.Algorithm.Name == algorithmStr {
 			dm.Pods = append(dm.Pods[:i], dm.Pods[i+1:]...)
-			log.Printf("Deleted pod with ClientID = %d and algorithm name = %s\n", clientID, algorithmStr)
+			log.Printf("Deleted pod with ClientID = %d and algorithm name = %s", clientID, algorithmStr)
 			return nil
 		}
 	}
@@ -38,11 +38,10 @@ func (dm *DeployManager) DeletePod(clientID int64, algorithmStr string) error {
 	return nil
 }
 
-func (ms *DeployManager) GetPodList() ([]string, error) {
-	// podNames := make([]string, len(ms.Pods))
-	// for i, pod := range ms.Pods {
-	// 	podNames[i] = pod.Algorithm.Name
-	// }
-	// return podNames, nil
-	return nil, nil
+func (dm *DeployManager) GetPodList() ([]string, error) {
+	podNames := make([]string, len(dm.Pods))
+	for i, pod := range dm.Pods {
+		podNames[i] = fmt.Sprintf("ClientID = %d  algorithm = %s",pod.ClientID, pod.Algorithm.Name)
+	}
+	return podNames, nil
 }
