@@ -17,7 +17,7 @@ type Client struct {
 	CPU         string    `db:"cpu" json:"cpu" binding:"required"`
 	Memory      string    `db:"memory" json:"memory" binding:"required"`
 	Priority    float64   `db:"priority" json:"priority" binding:"required"`
-	NeedRestart bool      `db:"need_restart" json:"need_restart" binding:"required"`
+	NeedRestart bool      `db:"need_restart" json:"need_restart"`
 	SpawnedAt   string    `db:"spawned_at" json:"spawned_at" binding:"required"`
 	CreatedAt   time.Time `db:"created_at" json:"-"`
 	UpdatedAt   time.Time `db:"update_at" json:"-"`

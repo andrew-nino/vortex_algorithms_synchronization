@@ -1,0 +1,26 @@
+services:
+
+  app:
+    container_name: vortex_as
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    restart: unless-stopped
+   
+  postgres:
+    container_name: vortex_as_pgdb
+    image: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  pg-data:
