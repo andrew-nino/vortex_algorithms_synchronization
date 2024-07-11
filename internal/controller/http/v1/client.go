@@ -13,6 +13,7 @@ type response struct {
 	ID      int    `json:"id"`
 }
 
+// Adding a new client. If successful, we get the client id
 func (h *Handler) addClient(c *gin.Context) {
 	newClient := entity.Client{}
 
@@ -29,6 +30,7 @@ func (h *Handler) addClient(c *gin.Context) {
 	c.JSON(http.StatusOK, response{Message: "success", ID: clientID})
 }
 
+// Update client data. If successful, we get the client id
 func (h *Handler) updateClient(c *gin.Context) {
 	updateClient := entity.Client{}
 
@@ -46,6 +48,7 @@ func (h *Handler) updateClient(c *gin.Context) {
 
 }
 
+// Deleting client data.
 func (h *Handler) deleteClient(c *gin.Context) {
 
 	paramStr := c.Query("client_id")

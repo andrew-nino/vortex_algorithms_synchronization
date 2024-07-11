@@ -18,6 +18,8 @@ func NewClientToPostgres(db *sqlx.DB) *ClientToPostgres {
 	return &ClientToPostgres{db: db}
 }
 
+// Adding client information to the database. The SpawnedAt parameter must be specified in the input data.
+// The created_at and update_at parameters will be filled with the current time. The work is wrapped in a transaction.
 func (c *ClientToPostgres) AddClient(add entity.Client) (int, error) {
 	tx, err := c.db.Begin()
 	if err != nil {
@@ -44,6 +46,7 @@ func (c *ClientToPostgres) AddClient(add entity.Client) (int, error) {
 	return clientID, tx.Commit()
 }
 
+// Required fields are checked when updating and the current time is set in the update_at value.
 func (c *ClientToPostgres) UpdateClient(client entity.Client) (int, error) {
 	var id int
 	setValues := make([]string, 0)
@@ -90,10 +93,10 @@ func (c *ClientToPostgres) UpdateClient(client entity.Client) (int, error) {
 		log.Debugf("repository.UpdateClient - row.Scan : %v", err)
 		return 0, err
 	}
-
 	return id, nil
 }
 
+// When deleting, the returned clientID value is checked to avoid pseudo-deleting a non-existent client.
 func (c *ClientToPostgres) DeleteClient(clientId int) error {
 	var checkID int
 	query := fmt.Sprintf(`DELETE FROM %s WHERE client_id = $1 RETURNING id`, clientTable)

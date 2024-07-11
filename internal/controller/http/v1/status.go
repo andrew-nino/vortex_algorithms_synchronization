@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Update algorithm statuses for clients. If the update is successful, we receive a confirmation with new statuses for the client.
 func (h *Handler) updateAlgorithmStatus(c *gin.Context) {
 
 	newStatus := entity.AlgorithmStatus{}
@@ -30,7 +31,5 @@ func (h *Handler) updateAlgorithmStatus(c *gin.Context) {
 		Description: "status updated successfully",
 		NewStatus:   newStatus,
 	}
-
 	c.JSON(http.StatusOK, fullresponse)
-
 }

@@ -10,6 +10,7 @@ type Server struct {
 	httpServer *http.Server
 }
 
+// Configure with the necessary parameters and start the server.
 func (s *Server) Run(port string, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           ":" + port,

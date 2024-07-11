@@ -16,6 +16,8 @@ func NewAlgorithmStatusToPostgres(db *sqlx.DB) *AlgorithmStatusToPostgres {
 	return &AlgorithmStatusToPostgres{db: db}
 }
 
+// The status is updated if there is a match on client_id.
+// The work is wrapped in a transaction, since the data from the table is used by the main method of checking statuses for changes.
 func (as *AlgorithmStatusToPostgres) UpdateStatus(status entity.AlgorithmStatus) error {
 	tx, err := as.db.Begin()
 	if err != nil {
@@ -23,7 +25,7 @@ func (as *AlgorithmStatusToPostgres) UpdateStatus(status entity.AlgorithmStatus)
 	}
 
 	var checkID int
-	query := "UPDATE algorithm_status SET vwap=$1, twap=$2, hft=$3 WHERE client_id=$4 RETURNING id"
+	query := fmt.Sprintf("UPDATE %s SET vwap=$1, twap=$2, hft=$3 WHERE client_id=$4 RETURNING id", statusTable)
 	row := tx.QueryRow(query, status.VWAP, status.TWAP, status.HFT, status.ClientID)
 	err = row.Scan(&checkID)
 	if err != nil {
@@ -34,6 +36,7 @@ func (as *AlgorithmStatusToPostgres) UpdateStatus(status entity.AlgorithmStatus)
 	return tx.Commit()
 }
 
+// We select data based on the status of the client’s algorithms.
 func (as *AlgorithmStatusToPostgres) CheckAlgorithmStatus() ([]entity.AlgorithmStatus, error) {
 
 	clientsStatuses := []entity.AlgorithmStatus{}
@@ -44,6 +47,5 @@ func (as *AlgorithmStatusToPostgres) CheckAlgorithmStatus() ([]entity.AlgorithmS
 		log.Debugf("repository.CheckAlgorithmStatus - db.Select: %v", err)
 		return nil, err
 	}
-
 	return clientsStatuses, nil
 }

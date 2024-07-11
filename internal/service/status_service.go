@@ -22,13 +22,15 @@ func (s *AlgorithmStatusService) UpdateStatus(status entity.AlgorithmStatus) err
 	return s.repo.UpdateStatus(status)
 }
 
+// Takes current data from the database and checks for changes in the state of each algorithm.
+// The argument received is an instance of the Deploy structure.
 func (s *AlgorithmStatusService) CheckAlgorithmStatus(deploy *deployment.Deploy) {
 
 	statusClients, err := s.repo.CheckAlgorithmStatus()
 	if err != nil {
 		log.Errorf("StatusService.CheckAlgorithmStatus - s.repo.CheckAlgorithmStatus: %v", err)
 	}
-
+	// There are two status states to process. Every one is checked.
 	for _, client := range statusClients {
 
 		if client.VWAP {
@@ -48,11 +50,10 @@ func (s *AlgorithmStatusService) CheckAlgorithmStatus(deploy *deployment.Deploy)
 		} else {
 			CheckAndStopDeployment(client.ClientID, "HFT", mapStatuses, deploy)
 		}
-
 	}
-
 }
 
+// Data about running pods is entered into the map. If there is no such pod, a new one is created.
 func CheckAndStartDeployment(clientID int64, statusClients string, mapStatuses map[int64][]string, deploy *deployment.Deploy) {
 
 	if statuses, ok := mapStatuses[clientID]; ok {
@@ -70,6 +71,7 @@ func CheckAndStartDeployment(clientID int64, statusClients string, mapStatuses m
 	}
 }
 
+// Data about running pods is entered into the map. If one exists, it is deleted.
 func CheckAndStopDeployment(clientID int64, statusClients string, mapStatuses map[int64][]string, deploy *deployment.Deploy) {
 
 	if statuses, ok := mapStatuses[clientID]; ok {

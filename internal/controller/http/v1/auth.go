@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
-
+// Registration of a new manager who has the right to manage clients and algorithm statuses.
 func (h *Handler) signUp(c *gin.Context) {
 
 	var input entity.Manager
@@ -32,6 +32,7 @@ type signInInput struct {
 	Password    string `json:"password" binding:"required" example:"qwerty"`
 }
 
+// Verification of the manager with receipt of a JWT token
 func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 

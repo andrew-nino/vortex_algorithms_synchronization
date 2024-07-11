@@ -16,7 +16,7 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db: db}
 }
 
-// We create a new user in the database and return his ID or the error [ErrNoRows] if it does not work.
+// We create a new manager in the database and return his ID or the error [ErrNoRows] if it does not work.
 func (r *AuthPostgres) CreateManager(mng entity.Manager) (int, error) {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (name, managername, password_hash) values ($1, $2, $3) RETURNING id", managerTable)

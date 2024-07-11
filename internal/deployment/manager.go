@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Implements the Deployer interface
 type DeployManager struct {
 	Pods []Pod
 }
@@ -13,10 +14,11 @@ func NewDeployManager() *DeployManager {
 	return &DeployManager{Pods: make([]Pod, 0)}
 }
 
+// Simulate the creation of a pod when the DeployManager is created
 func (dm *DeployManager) CreatePod(clientID int64, algorithmStr string) error {
 	if len(algorithmStr) == 0 {
 		return fmt.Errorf("algorithm name must be provided")
-	}
+	}	
 	algorithm := NewAlgorithm(algorithmStr)
 	newPod := NewPod(clientID, algorithm)
 
@@ -25,6 +27,7 @@ func (dm *DeployManager) CreatePod(clientID int64, algorithmStr string) error {
 	return nil
 }
 
+// Simulate pod removal when creating DeployManager.
 func (dm *DeployManager) DeletePod(clientID int64, algorithmStr string) error {
 
 	for i, pod := range dm.Pods {
@@ -38,6 +41,7 @@ func (dm *DeployManager) DeletePod(clientID int64, algorithmStr string) error {
 	return nil
 }
 
+// Simulating receiving data about running pods
 func (dm *DeployManager) GetPodList() ([]string, error) {
 	podNames := make([]string, len(dm.Pods))
 	for i, pod := range dm.Pods {

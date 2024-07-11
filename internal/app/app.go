@@ -74,6 +74,7 @@ func Run(configPath string) {
 		}
 	}()
 
+	// Waiting signal
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
