@@ -19,6 +19,7 @@ type ClientPostgres interface {
 
 type AlgorithmStatusPostgres interface {
 	UpdateStatus(status entity.AlgorithmStatus) error
+	CheckAlgorithmStatus() ([]entity.AlgorithmStatus, error)
 }
 
 type PG_Repository struct {

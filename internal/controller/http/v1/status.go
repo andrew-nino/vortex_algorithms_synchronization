@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) updateStatus(c *gin.Context) {
+func (h *Handler) updateAlgorithmStatus(c *gin.Context) {
 
 	newStatus := entity.AlgorithmStatus{}
 
@@ -23,12 +23,12 @@ func (h *Handler) updateStatus(c *gin.Context) {
 	}
 
 	type fullResponse struct {
-		Description string `json:"description"`
-		NewStatus entity.AlgorithmStatus `json:"newStatus"`
+		Description string                 `json:"description"`
+		NewStatus   entity.AlgorithmStatus `json:"newStatus"`
 	}
 	fullresponse := fullResponse{
 		Description: "status updated successfully",
-        NewStatus: newStatus,
+		NewStatus:   newStatus,
 	}
 
 	c.JSON(http.StatusOK, fullresponse)

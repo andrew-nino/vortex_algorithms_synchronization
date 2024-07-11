@@ -27,14 +27,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	client := v1.Group("/client")
 	{
-		client.POST("/", h.addClient)
+		client.POST("", h.addClient)
 		client.PUT("/update", h.updateClient)
 		client.DELETE("/delete", h.deleteClient)
 	}
 
 	status := v1.Group("/status")
 	{
-		status.PUT("/update", h.updateStatus)
+		status.PUT("/update", h.updateAlgorithmStatus)
 	}
 
 	return router

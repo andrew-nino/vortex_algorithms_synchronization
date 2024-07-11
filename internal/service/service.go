@@ -4,6 +4,7 @@ import (
 	"github.com/andrew-nino/vtx_algorithms_synchronization/config"
 	"github.com/andrew-nino/vtx_algorithms_synchronization/entity"
 
+	"github.com/andrew-nino/vtx_algorithms_synchronization/internal/deployment"
 	postgres "github.com/andrew-nino/vtx_algorithms_synchronization/internal/repository/postgresdb"
 )
 
@@ -21,6 +22,7 @@ type Client interface {
 
 type AlgorithmStatus interface {
 	UpdateStatus(status entity.AlgorithmStatus) error
+	CheckAlgorithmStatus(deploy *deployment.Deploy)
 }
 
 type Service struct {

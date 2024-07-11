@@ -5,9 +5,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/andrew-nino/vtx_algorithms_synchronization/config"
 	handler "github.com/andrew-nino/vtx_algorithms_synchronization/internal/controller/http/v1"
+	"github.com/andrew-nino/vtx_algorithms_synchronization/internal/deployment"
 	repoPG "github.com/andrew-nino/vtx_algorithms_synchronization/internal/repository/postgresdb"
 	service "github.com/andrew-nino/vtx_algorithms_synchronization/internal/service"
 	httpserver "github.com/andrew-nino/vtx_algorithms_synchronization/pkg/httpserver"
@@ -61,6 +63,17 @@ func Run(configPath string) {
 	}()
 
 	log.Print("App " + cfg.App.Name + " version: " + cfg.App.Version + " Started")
+
+	go func() {
+		// Deployer initializations
+		deploy := deployment.NewDeploy()
+		for {
+			log.Print("Algorithm status check started")
+			service.CheckAlgorithmStatus(deploy)
+			// time.Sleep(5 * time.Minute)
+			time.Sleep(1 * time.Minute)
+		}
+	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
